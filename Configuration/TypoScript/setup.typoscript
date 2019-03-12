@@ -1,0 +1,34 @@
+cartNexi = PAGE
+cartNexi {
+    typeNum = {$plugin.tx_cartnexi.redirectTypeNum}
+
+    config {
+        disableAllHeaderCode = 1
+        xhtml_cleaning = 0
+        admPanel = 0
+        debug = 0
+        no_cache = 1
+    }
+
+    10 < tt_content.list.20.cartnexi_cart
+    10.features.requireCHashArgumentForActionArguments = 0
+}
+
+plugin.tx_cartnexi {
+    sandbox = 1
+
+    redirectTypeNum = {$plugin.tx_cartnexi.redirectTypeNum}
+
+    finishers {
+        order {
+            success {
+                400 {
+                    class = Extcode\Cart\Domain\Finisher\Order\EmailFinisher
+                }
+                500 {
+                    class = Extcode\Cart\Domain\Finisher\Order\ClearCartFinisher
+                }
+            }
+        }
+    }
+}
